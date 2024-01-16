@@ -18,24 +18,6 @@ const todoSchema = new mongoose.Schema({
   },
 });
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    lowercase: true,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    minLength: 6,
-  },
-});
-
 // Export the schema as a Monogoose model.
 // The Mongoose model will be accessed in `models/index.js`
 module.exports = mongoose.model("Todo", todoSchema);
