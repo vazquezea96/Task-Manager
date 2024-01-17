@@ -10,6 +10,11 @@ const connectLiveReload = require("connect-livereload");
 --------------------------------------------------------------- */
 const db = require("./models");
 
+/* Require the routes in the controllers folder
+--------------------------------------------------------------- */
+const todosCtrl = require("./controllers/todos");
+const todos = require("./models/seed");
+
 /* Create the Express app
 --------------------------------------------------------------- */
 const app = express();
@@ -33,11 +38,32 @@ app.set("views", path.join(__dirname, "views"));
 --------------------------------------------------------------- */
 app.use(express.static("public"));
 app.use(connectLiveReload());
+// This tells our app to look at the `controllers/todos.js` file
+// to handle all routes that begin with `localhost:3000/todos`
+app.use("/todos", todosCtrl);
 
 /* Mount routes
 --------------------------------------------------------------- */
 app.get("/", function (req, res) {
-  res.send("Todo App");
+  db.Todo.find({}).then((todos) => {
+    res.render("home", {
+      todos: todos,
+    });
+  });
+});
+
+// When a GET request is sent to `/seed`, the todos in `seed.js` will be added
+//  to the database.
+app.get("/seed", function (req, res) {
+  // Remove any exisiting todos
+  db.Todo.deleteMany({}).then((removedTodos) => {
+    console.log(`Removed ${removedTodos.deletedCount} todos`);
+    // Seed the todos collection with the seed data
+    db.Todo.insertMany(db.seedTodos).then((addedTodos) => {
+      console.log(`Added ${addedTodos.length} todos`);
+      res.json(addedTodos);
+    });
+  });
 });
 
 /* Tell the app to listen on the specified port

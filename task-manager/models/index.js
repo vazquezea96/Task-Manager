@@ -13,4 +13,5 @@ db.on("connected", function () {
 
 module.exports = {
   Todo: require("./todo"),
+  seedTodos: require("./seed"),
 };
