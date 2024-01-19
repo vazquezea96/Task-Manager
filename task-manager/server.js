@@ -7,6 +7,9 @@ const todoRoutes = require("./routes/todos");
 
 require("dotenv").config({ path: "./config/.env" });
 
+// Passport Auth Config
+require("./config/passport");
+
 connectDB();
 
 app.set("view engine", "ejs");
