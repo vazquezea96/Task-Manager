@@ -1,55 +1,72 @@
-// Contains all the routes for any URI starting with /todos.
-/* 
----------------------------------------------------------------------------------------
-NOTE: Remember that all routes on this page are prefixed with `localhost:3000/pets`
----------------------------------------------------------------------------------------
-*/
+const Todo = require("../models/Todo");
 
-/* Require modules
---------------------------------------------------------------- */
-const express = require("express");
-const router = express.Router();
-
-/* Require the db connection, and models
---------------------------------------------------------------- */
-const db = require("../models");
-const Todo = require("../models/todo");
-
-/* Routes
---------------------------------------------------------------- */
-// Index Route (GET/Read): Will display all of the todos in the database.
-router.get("/", function (req, res) {
-  db.Todo.find({}).then((todos) => res.render("home", { todos: todos }));
-});
-
-// Show Route (GET/Read): Will display a single todo from the database.
-router.get("/:id", function (req, res) {
-  db.Todo.findById(req.params.id)
-    .then((todo) => res.render("todo-details", { todo: todo }))
-    .catch(() => res.send("404 Error: Page Not Found."));
-});
-
-// Create Route (POST/Create): Will add a new todo to the database.
-router.post("/", function (req, res) {
-  db.Todo.create(req.body)
-    .then(() => res.redirect("/todos"))
-    .catch(() => res.send("404 Error: Page Not Found."));
-});
-
-// Update Route (PUT/Update): Will update a todo in the database.
-router.put("/:id", function (req, res) {
-  db.Todo.findByIdAndUpdate(req.params.id, req.body)
-    .then(() => res.redirect("/todos"))
-    .catch(() => res.send("404 Error: Page Not Found."));
-});
-
-// Delete Route (DELETE/Delete): Will delete a todo from the database.
-router.delete("/:id", function (req, res) {
-  db.Todo.findByIdAndDelete(req.params.id)
-    .then(() => res.redirect("/todos"))
-    .catch(() => res.send("404 Error: Page Not Found."));
-});
-
-/* Export these routes so that they are accessible in `server.js`
---------------------------------------------------------------- */
-module.exports = router;
+module.exports = {
+  getTodos: async (req, res) => {
+    console.log(req.user);
+    try {
+      const todoItems = await Todo.find({ userId: req.user.id });
+      const itemsLeft = await Todo.countDocuments({
+        userId: req.user.id,
+        completed: false,
+      });
+      res.render("todos.ejs", {
+        todos: todoItems,
+        left: itemsLeft,
+        user: req.user,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  createTodo: async (req, res) => {
+    try {
+      await Todo.create({
+        todo: req.body.todoItem,
+        completed: false,
+        userId: req.user.id,
+      });
+      console.log("Todo has been added!");
+      res.redirect("/todos");
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  markComplete: async (req, res) => {
+    try {
+      await Todo.findOneAndUpdate(
+        { _id: req.body.todoIdFromJSFile },
+        {
+          completed: true,
+        }
+      );
+      console.log("Marked Complete");
+      res.json("Marked Complete");
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  markIncomplete: async (req, res) => {
+    try {
+      await Todo.findOneAndUpdate(
+        { _id: req.body.todoIdFromJSFile },
+        {
+          completed: false,
+        }
+      );
+      console.log("Marked Incomplete");
+      res.json("Marked Incomplete");
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  deleteTodo: async (req, res) => {
+    console.log(req.body.todoIdFromJSFile);
+    try {
+      await Todo.findOneAndDelete({ _id: req.body.todoIdFromJSFile });
+      console.log("Deleted Todo");
+      res.json("Deleted It");
+    } catch (err) {
+      console.log(err);
+    }
+  },
+};
