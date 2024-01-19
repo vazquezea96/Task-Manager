@@ -7,40 +7,39 @@ let db,
   dbConnectionStr = process.env.MONGODBURI,
   dbName = "todo";
 
-MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true }).then(
-  (client) => {
-    console.log(`Connected to ${dbName} Database`);
-    db = client.db(dbName);
-  }
-);
+MongoClient.connect(dbConnectionStr).then((client) => {
+  console.log(`Connected to ${dbName} Database`);
+  db = client.db(dbName);
+});
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get("/", async (request, response) => {
+// Routes - CRUD Actions
+app.get("/", async (req, res) => {
   const todoItems = await db.collection("todos").find().toArray();
   const itemsLeft = await db
     .collection("todos")
-    .countDocuments({ completd: false });
-  response.render("index.ejs", { items: todoItems, left: itemsLeft });
+    .countDocuments({ completed: false });
+  res.render("index.ejs", { items: todoItems, left: itemsLeft });
 });
 
-app.post("/addTodo", (request, response) => {
+app.post("/addTodo", (req, res) => {
   db.collection("todos")
-    .insertOne({ thing: request.body.todoItem, completed: false })
+    .insertOne({ thing: req.body.todoItem, completed: false })
     .then((result) => {
       console.log("Todo Added");
-      response.redirect("/");
+      res.redirect("/");
     })
     .catch((error) => console.error(error));
 });
 
-app.put("/markComplete", (request, response) => {
+app.put("/markComplete", (req, res) => {
   db.collection("todos")
     .updateOne(
-      { thing: request.body.itemFromJS },
+      { thing: req.body.itemFromJS },
       {
         $set: {
           completed: true,
@@ -52,7 +51,7 @@ app.put("/markComplete", (request, response) => {
     )
     .then((result) => {
       console.log("Marked Complete");
-      response.json("Marked Complete");
+      res.json("Marked Complete");
     })
     .catch((error) => console.error(error));
 });
@@ -60,7 +59,7 @@ app.put("/markComplete", (request, response) => {
 app.put("/MarkUncomplete", (req, res) => {
   db.collection("todos")
     .updateOne(
-      { thing: express.request.body.itemFromJS },
+      { thing: req.body.itemFromJS },
       {
         $set: {
           completed: false,
