@@ -3,24 +3,50 @@
 ![Screenshot of Todo App](/assets/images/todo-manager1.png)
 ![Screenshot of Todo App](/assets/images/task-manager2.png)
 
-## Live Demo (Link not working at the moment)
+## Route Table
+
+| **URL**         | **REST Route** | **HTTP Verb** | **CRUD Action** | **EJS View(s)**  |
+| --------------- | -------------- | ------------- | --------------- | ---------------- |
+| /dashboard      |                | GET           | read            | home.ejs         |
+| /tasks          | index          | GET           | read            | task-index.ejs   |
+| /tasks/:id      | show           | GET           | read            | task-details.ejs |
+| /tasks/new      | new            | GET           |                 | new-task.ejs     |
+| /tasks          | create         | POST          | create          |                  |
+| /tasks/:id/edit | edit           | GET           | read            | edit-task.ejs    |
+| /tasks/:id      | update         | PATCH/PUT     | update          |                  |
+| /tasks/:id      | destroy        | DELETE        | delete          |                  |
+| /seed           |                | GET           | delete & create |                  |
+| /about          |                | GET           |                 | about.ejs        |
+| /\*             |                | GET           |                 | 404.ejs          |
+| /users          | index          | GET           | read            | user-index.ejs   |
+| /users/:id      | show           | GET           | read            | user-details.ejs |
+| /users/new      | new            | GET           |                 | new-user.ejs     |
+| /users          | create         | POST          | create          |                  |
+| /users/:id/edit | edit           | GET           | read            | edit-user.ejs    |
+| /users/:id      | update         | PATCH/PUT     | update          |                  |
+| /users/:id      | destroy        | DELETE        | delete          |                  |
+
+## Live Demo
 
 https://ga-task-manager-app-96188fead713.herokuapp.com/
 
 ## Technologies Used:
+
 - HTML
 - CSS
-- JavaScript
+ - [JavaScript](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
+ - [Nodejs](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
 - EJS
 - MongoDB
 - Mongoose
 
 ## Installation Instructions:
+
 - Fork Repo
-- Run ```npm install``` in Root Folder 
+- Run `npm install` in Root Folder
 - Create .env file, add your db string in order to connect to db
-- Run ```npm run dev```
-- Go to ```localhost:3000```
+- Run `npm run dev`
+- Go to `localhost:3000`
 
 ## User Stories
 
@@ -30,7 +56,8 @@ https://ga-task-manager-app-96188fead713.herokuapp.com/
 - As a user, I want to be able to create new tasks so that I can organize and manage my work effectively.
 
 ## Unsolved Problems or Major Hurdles I faced:
-- Hosting the application on Heroku has been my biggest unsolved problem. Somehow the app opens the home page but when I go to the todos route the web app crashes. Still haven't found out why but I will. Aside from that I had some trouble connecting the routes in the beginning. 
+
+- Hosting the application on Heroku has been my biggest unsolved problem. Somehow the app opens the home page but when I go to the todos route the web app crashes. Still haven't found out why but I will. Aside from that I had some trouble connecting the routes in the beginning.
 
 ## Next Steps:
 
@@ -51,7 +78,7 @@ Allow users to edit task details.
 Display a personalized dashboard for each user, showing their tasks.
 Include sections for upcoming tasks and completed tasks.
 
-Drag & Drop Functionality 
+Drag & Drop Functionality
 
 ### Categories or Labels:
 
