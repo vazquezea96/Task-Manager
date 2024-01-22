@@ -1,10 +1,22 @@
-h1 {
-  color: red;
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+body {
+  display: flex;
+  flex-direction: column;   
+  justify-content: center;
+  align-items: center;
+  font-family: 'Roboto', sans-serif;
+
 }
 .completed {
   text-decoration: line-through;
   color: gray;
 }
 .not {
-  text-decoration: underline;
+  text-decoration: none;
+  color: black;
 }
